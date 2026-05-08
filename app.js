@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-//endpoints
+//endpoints 
 
 app.get('/classificacoes', (req, res) => {
 
@@ -51,7 +51,8 @@ app.get('/marcadores', (req, res) => {
     const marcadores = [
         { jogador: "Zaidu", equipa: "Porto", golos: 18 },
         { jogador: "Suarez", equipa: "Sporting", golos: 15 },
-        { jogador: "Rafa", equipa: "Benfica", golos: 12 }
+        { jogador: "Rafa", equipa: "Benfica", golos: 12 },
+        { jogador: "Kiwior", equipa: "Porto", golos: 10 },
     ];
 
     res.json(marcadores);
