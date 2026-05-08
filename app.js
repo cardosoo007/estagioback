@@ -20,25 +20,25 @@ app.get('/equipas', (req, res) => {
             equipa: "Benfica",
             treinador: { nome: "Jose Mourinho", idade: 57 },
             jogadores: [
-                { nome: "Pavlidis", idade: 36, posicao: "Extremo" },
-                { nome: "Rafa", idade: 31, posicao: "Avançado" }],
+                { id: 1, nome: "Pavlidis", idade: 36, posicao: "Extremo" },
+                { id: 2, nome: "Rafa", idade: 31, posicao: "Avançado" }],
         },
 
         {
             equipa: "Porto",
             treinador: { nome: "Farioli", idade: 40 },
             jogadores: [
-                { nome: "Pepe", idade: 41, posicao: "Defesa" },
-                { nome: "Kiwior", idade: 24, posicao: "Defesa" },
-                { nome: "Zaidu", idade: 27, posicao: "Defesa" }]
+                { id: 3, nome: "Pepe", idade: 41, posicao: "Defesa" },
+                { id: 4, nome: "Kiwior", idade: 24, posicao: "Defesa" },
+                { id: 5, nome: "Zaidu", idade: 27, posicao: "Defesa" }]
         },
         {
             equipa: "Sporting",
             treinador: { nome: "Rúben Amorim", idade: 39 },
             jogadores: [
-                { nome: "Suarez", idade: 27, posicao: "Avançado" },
-                { nome: "Pedro Gonçalves", idade: 26, posicao: "Médio" },
-                { nome: "Inácio", idade: 22, posicao: "Defesa" }]
+                { id: 6, nome: "Suarez", idade: 27, posicao: "Avançado" },
+                { id: 7, nome: "Pedro Gonçalves", idade: 26, posicao: "Médio" },
+                { id: 8, nome: "Inácio", idade: 22, posicao: "Defesa" }]
         }
 
     ];
@@ -49,15 +49,29 @@ app.get('/equipas', (req, res) => {
 app.get('/marcadores', (req, res) => {
 
     const marcadores = [
-        { jogador: "Zaidu", equipa: "Porto", golos: 18 },
-        { jogador: "Suarez", equipa: "Sporting", golos: 15 },
-        { jogador: "Rafa", equipa: "Benfica", golos: 12 },
-        { jogador: "Kiwior", equipa: "Porto", golos: 10 },
+        { id: 5, jogador: "Zaidu", equipa: "Porto", golos: 18 },
+        { id: 6, jogador: "Suarez", equipa: "Sporting", golos: 15 },
+        { id: 2, jogador: "Rafa", equipa: "Benfica", golos: 12 },
+        { id: 4, jogador: "Kiwior", equipa: "Porto", golos: 10 },
     ];
 
     res.json(marcadores);
 });
 
+app.get('/jogadores/:idjogador', (req, res) => {
+
+
+    const marcadores = [
+        { id: 5, nome: "Zaidu", idade: 27, posicao: "Avançado", equipa: "Porto", golos: 18 },
+        { id: 6, nome: "Suarez", idade: 27, posicao: "Avançado", equipa: "Sporting", golos: 15 },
+        { id: 2, nome: "Rafa", idade: 31, posicao: "Avançado", equipa: "Benfica", golos: 12 },
+        { id: 4, nome: "Kiwior", idade: 24, posicao: "Defesa", equipa: "Porto", golos: 10 },
+    ];
+
+    const jogador = marcadores.find(marcador => marcador.id == (req.params.idjogador));
+    console.log(jogador);
+    res.json(jogador);
+});
 
 
 
