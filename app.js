@@ -17,6 +17,7 @@ app.get('/equipas', (req, res) => {
 
     const equipas = [
         {
+            id: 1,
             equipa: "Benfica",
             treinador: { nome: "Jose Mourinho", idade: 57 },
             jogadores: [
@@ -25,6 +26,7 @@ app.get('/equipas', (req, res) => {
         },
 
         {
+            id: 2,
             equipa: "Porto",
             treinador: { nome: "Farioli", idade: 40 },
             jogadores: [
@@ -33,6 +35,7 @@ app.get('/equipas', (req, res) => {
                 { id: 5, nome: "Zaidu", idade: 27, posicao: "Defesa" }]
         },
         {
+            id: 3,
             equipa: "Sporting",
             treinador: { nome: "Rúben Amorim", idade: 39 },
             jogadores: [
@@ -71,6 +74,43 @@ app.get('/jogadores/:idjogador', (req, res) => {
     const jogador = marcadores.find(marcador => marcador.id == (req.params.idjogador));
     console.log(jogador);
     res.json(jogador);
+});
+
+app.get('/equipas/:idequipa', (req, res) => {
+    const equipas = [
+        {
+            id: 1,
+            equipa: "Benfica", treinador: { nome: "Jose Mourinho", idade: 57 },
+            pontos: 30,
+            jogadores: [
+                { id: 1, nome: "Pavlidis", idade: 36, posicao: "Extremo" },
+                { id: 2, nome: "Rafa", idade: 31, posicao: "Avançado" }],
+        },
+
+        {
+            id: 2,
+            equipa: "Porto", treinador: { nome: "Farioli", idade: 40 },
+            pontos: 32,
+            jogadores: [
+                { id: 3, nome: "Pepe", idade: 41, posicao: "Defesa" },
+                { id: 4, nome: "Kiwior", idade: 24, posicao: "Defesa" },
+                { id: 5, nome: "Zaidu", idade: 27, posicao: "Defesa" }]
+        },
+        {
+            id: 3,
+            equipa: "Sporting", treinador: { nome: "Rúben Amorim", idade: 39 },
+            pontos: 27,
+            jogadores: [
+                { id: 6, nome: "Suarez", idade: 27, posicao: "Avançado" },
+                { id: 7, nome: "Pedro Gonçalves", idade: 26, posicao: "Médio" },
+                { id: 8, nome: "Inácio", idade: 22, posicao: "Defesa" }]
+        }
+
+    ];
+
+    const equipa = equipas.find(equipa => equipa.id == req.params.idequipa);
+    console.log(equipa);
+    res.json(equipa);
 });
 
 
