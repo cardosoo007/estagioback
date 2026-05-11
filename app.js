@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 const port = 3000
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 
 //endpoints 
 
@@ -113,6 +116,10 @@ app.get('/equipas/:idequipa', (req, res) => {
     res.json(equipa);
 });
 
+app.post('/equipas', (request, response) => {
+    console.log(request.body);
+    response.json({});
+});
 
 
 app.listen(port, () => {
