@@ -29,10 +29,10 @@ app.get("/marcadores", (req, res) => {
   res.json(marcadores);
 });
 
-app.get("/jogadores/:idjogador", (req, res) => {
-  const marcadores = [
+app.get("/jogadores", (req, res) => {
+  const jogadores = [
     {
-      id: 5,
+      id: 1,
       nome: "Zaidu",
       idade: 27,
       posicao: "Avançado",
@@ -40,7 +40,7 @@ app.get("/jogadores/:idjogador", (req, res) => {
       golos: 18,
     },
     {
-      id: 6,
+      id: 2,
       nome: "Suarez",
       idade: 27,
       posicao: "Avançado",
@@ -48,7 +48,7 @@ app.get("/jogadores/:idjogador", (req, res) => {
       golos: 15,
     },
     {
-      id: 2,
+      id: 3,
       nome: "Rafa",
       idade: 31,
       posicao: "Avançado",
@@ -62,6 +62,124 @@ app.get("/jogadores/:idjogador", (req, res) => {
       posicao: "Defesa",
       equipa: "Porto",
       golos: 10,
+    },
+    {
+      id: 5,
+      nome: "Otávio",
+      idade: 29,
+      posicao: "Médio",
+      equipa: "Porto",
+      golos: 5,
+    },
+    {
+      id: 6,
+      nome: "Doumbia",
+      idade: 26,
+      posicao: "Avançado",
+      equipa: "Sporting",
+      golos: 9,
+    },
+    {
+      id: 7,
+      nome: "Paulista",
+      idade: 30,
+      posicao: "Defesa",
+      equipa: "Sporting",
+      golos: 1,
+    },
+    {
+      id: 8,
+      nome: "Otamendi",
+      idade: 34,
+      posicao: "Defesa",
+      equipa: "Benfica",
+      golos: 2,
+    },
+    {
+      id: 9,
+      nome: "Grimaldo",
+      idade: 28,
+      posicao: "Lateral",
+      equipa: "Benfica",
+      golos: 7,
+    },
+  ];
+  res.json(jogadores);
+});
+
+app.get("/jogadores/:idjogador", (req, res) => {
+  const marcadores = [
+    {
+      id: 1,
+      nome: "Zaidu",
+      idade: 27,
+      posicao: "Avançado",
+      equipa: "Porto",
+      golos: 18,
+    },
+    {
+      id: 2,
+      nome: "Suarez",
+      idade: 27,
+      posicao: "Avançado",
+      equipa: "Sporting",
+      golos: 15,
+    },
+    {
+      id: 3,
+      nome: "Rafa",
+      idade: 31,
+      posicao: "Avançado",
+      equipa: "Benfica",
+      golos: 12,
+    },
+    {
+      id: 4,
+      nome: "Kiwior",
+      idade: 24,
+      posicao: "Defesa",
+      equipa: "Porto",
+      golos: 10,
+    },
+    {
+      id: 5,
+      nome: "Otávio",
+      idade: 29,
+      posicao: "Médio",
+      equipa: "Porto",
+      golos: 5,
+    },
+    {
+      id: 6,
+      nome: "Doumbia",
+      idade: 26,
+      posicao: "Avançado",
+      equipa: "Sporting",
+      golos: 9,
+    },
+    {
+      id: 7,
+      nome: "Paulista",
+      idade: 30,
+      posicao: "Defesa",
+      equipa: "Sporting",
+      golos: 1,
+    },
+    {
+      id: 8,
+      nome: "Otamendi",
+      idade: 34,
+      posicao: "Defesa",
+      equipa: "Benfica",
+      golos: 2,
+    },
+    {
+      id: 9,
+      nome: "Grimaldo",
+      idade: 28,
+      posicao: "Lateral",
+      equipa: "Benfica",
+      golos: 7,
     },
   ];
 
@@ -107,6 +225,20 @@ app.get("/equipas/:idequipa", (req, res) => {
 });
 
 app.post("/equipas", (request, response) => {
+  console.log(request.body.novaEquipa.nomeEquipa);
+  equipasDB.push({
+    id: 5,
+    equipa: request.body.novaEquipa.nomeEquipa,
+    treinador: {
+      nome: request.body.novaEquipa.nomeTreinador,
+      idade: request.body.novaEquipa.idadeTreinador,
+    },
+    pontos: request.body.novaEquipa.pontos,
+  });
+  response.json({});
+});
+
+app.post("/marcadores", (request, response) => {
   console.log(request.body.novaEquipa.nomeEquipa);
   equipasDB.push({
     id: 5,
