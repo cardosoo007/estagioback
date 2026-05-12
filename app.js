@@ -1,13 +1,18 @@
+// Importar bibliotecas
 import express from "express";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
 
+// Criar aplicação Express
 const app = express();
 const port = 3000;
+
+// Middleware para processar dados JSON e formulários
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-//endpoints
+// ===== ENDPOINTS GET =====
 
+// Devolve as classificações das equipas
 app.get("/classificacoes", (req, res) => {
   const classificacoes = [
     { equipa: "Benfica", pontos: 30 },
@@ -16,28 +21,33 @@ app.get("/classificacoes", (req, res) => {
   ];
   res.json(classificacoes);
 });
+
+// Devolve todas as equipas
 app.get("/equipas", (req, res) => {
   res.json(equipasDB);
 });
 
+// Devolve a lista de marcadores (top goleadores)
 app.get("/marcadores", (req, res) => {
   const marcadores = [
-    { id: 5, jogador: "Zaidu", equipa: "Porto", golos: 18 },
-    { id: 6, jogador: "Suarez", equipa: "Sporting", golos: 15 },
-    { id: 2, jogador: "Rafa", equipa: "Benfica", golos: 12 },
-    { id: 4, jogador: "Kiwior", equipa: "Porto", golos: 10 },
+    { id: uuidv4(), jogador: "Zaidu", equipa: "Porto", golos: 18 },
+    { id: uuidv4(), jogador: "Suarez", equipa: "Sporting", golos: 15 },
+    { id: uuidv4(), jogador: "Rafa", equipa: "Benfica", golos: 12 },
+    { id: uuidv4(), jogador: "Kiwior", equipa: "Porto", golos: 10 },
   ];
 
   res.json(marcadores);
 });
 
+// Devolve todos os jogadores
 app.get("/jogadores", (req, res) => {
   res.json(jogadoresDB);
 });
 
+// Base de dados dos jogadores
 const jogadoresDB = [
   {
-    id: 1,
+    id: uuidv4(),
     nome: "Zaidu",
     idade: 27,
     posicao: "Avançado",
@@ -45,7 +55,7 @@ const jogadoresDB = [
     golos: 18,
   },
   {
-    id: 2,
+    id: uuidv4(),
     nome: "Suarez",
     idade: 27,
     posicao: "Avançado",
@@ -53,7 +63,7 @@ const jogadoresDB = [
     golos: 15,
   },
   {
-    id: 3,
+    id: uuidv4(),
     nome: "Rafa",
     idade: 31,
     posicao: "Avançado",
@@ -61,7 +71,7 @@ const jogadoresDB = [
     golos: 12,
   },
   {
-    id: 4,
+    id: uuidv4(),
     nome: "Kiwior",
     idade: 24,
     posicao: "Defesa",
@@ -69,7 +79,7 @@ const jogadoresDB = [
     golos: 10,
   },
   {
-    id: 5,
+    id: uuidv4(),
     nome: "Otávio",
     idade: 29,
     posicao: "Médio",
@@ -77,7 +87,7 @@ const jogadoresDB = [
     golos: 5,
   },
   {
-    id: 6,
+    id: uuidv4(),
     nome: "Doumbia",
     idade: 26,
     posicao: "Avançado",
@@ -85,7 +95,7 @@ const jogadoresDB = [
     golos: 9,
   },
   {
-    id: 7,
+    id: uuidv4(),
     nome: "Paulista",
     idade: 30,
     posicao: "Defesa",
@@ -93,7 +103,7 @@ const jogadoresDB = [
     golos: 1,
   },
   {
-    id: 8,
+    id: uuidv4(),
     nome: "Otamendi",
     idade: 34,
     posicao: "Defesa",
@@ -101,7 +111,7 @@ const jogadoresDB = [
     golos: 2,
   },
   {
-    id: 9,
+    id: uuidv4(),
     nome: "Grimaldo",
     idade: 28,
     posicao: "Lateral",
@@ -109,6 +119,8 @@ const jogadoresDB = [
     golos: 7,
   },
 ];
+
+// Devolve um jogador específico pelo ID
 app.get("/jogadores/:idjogador", (req, res) => {
   const marcadores = [
     {
@@ -185,51 +197,57 @@ app.get("/jogadores/:idjogador", (req, res) => {
     },
   ];
 
+  // Procura o jogador com o ID recebido na URL
   const jogador = jogadoresDB.find(
     (jogador) => jogador.id == req.params.idjogador,
   );
-  console.log(jogador);
-  res.json(jogador);
+  console.log(jogador); // Imprime na consola para debug
+  res.json(jogador); // Devolve o jogador encontrado
 });
 
+// Base de dados das equipas
 const equipasDB = [
   {
-    id: 1,
+    id: uuidv4(),
     equipa: "Benfica",
     treinador: { nome: "Jose Mourinho", idade: 57 },
     pontos: 30,
   },
 
   {
-    id: 2,
+    id: uuidv4(),
     equipa: "Porto",
     treinador: { nome: "Farioli", idade: 40 },
     pontos: 32,
   },
   {
-    id: 3,
+    id: uuidv4(),
     equipa: "Sporting",
     treinador: { nome: "Rúben Amorim", idade: 39 },
     pontos: 27,
   },
   {
-    id: 4,
+    id: uuidv4(),
     equipa: "Valonguese",
     treinador: { nome: "Joao Sousa", idade: 60 },
     pontos: 27,
   },
 ];
 
+// Devolve uma equipa específica pelo ID
 app.get("/equipas/:idequipa", (req, res) => {
   const equipa = equipasDB.find((equipa) => equipa.id == req.params.idequipa);
-  console.log(equipa);
+  console.log(equipa); // Debug
   res.json(equipa);
 });
 
+// ===== ENDPOINTS POST =====
+
+// Adiciona uma nova equipa
 app.post("/equipas", (request, response) => {
-  console.log(request.body);
+  console.log(request.body.novaEquipa.nomeEquipa); // Imprime os dados recebidos
   equipasDB.push({
-    id: 5,
+    id: uuidv4(),
     equipa: request.body.novaEquipa.nomeEquipa,
     treinador: {
       nome: request.body.novaEquipa.nomeTreinador,
@@ -240,19 +258,21 @@ app.post("/equipas", (request, response) => {
   response.json({});
 });
 
+// Adiciona um novo jogador
 app.post("/jogadores", (request, response) => {
-  console.log(request.body.novoJogador.nomeJogador);
+  console.log(request.body.novoJogador.nomeJogador); // Imprime nome do jogador
   jogadoresDB.push({
-    id: 1,
-    nome: request.body.nomeJogador,
-    idade: request.body.idadeJogador,
-    posicao: request.body.posicao,
-    equipa: request.body.equipaJogador,
-    golos: request.body.golos,
+    id: uuidv4(),
+    nome: request.body.novoJogador.nomeJogador,
+    idade: request.body.novoJogador.idadeJogador,
+    posicao: request.body.novoJogador.posicao,
+    equipa: request.body.novoJogador.nomeEquipa,
+    golos: request.body.novoJogador.golos,
   });
   response.json({});
 });
 
+// Inicia o servidor na porta 3000
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
