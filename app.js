@@ -1,9 +1,11 @@
-const express = require("express");
+import express from "express";
+import { v4 as uuidv4 } from "uuid";
+
 const app = express();
 const port = 3000;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-import { v4 as uuidv4 } from "uuid";
+
 //endpoints
 
 app.get("/classificacoes", (req, res) => {
