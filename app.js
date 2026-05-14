@@ -27,18 +27,15 @@ app.get("/equipas", (req, res) => {
   res.json(equipasDB);
 });
 
-// Devolve a lista de marcadores (top goleadores)
+// Devolve a lista de marcadores
 app.get("/marcadores", (req, res) => {
-  const marcadores = [
-    { id: uuidv4(), jogador: "Zaidu", equipa: "Porto", golos: 18 },
-    { id: uuidv4(), jogador: "Suarez", equipa: "Sporting", golos: 15 },
-    { id: uuidv4(), jogador: "Rafa", equipa: "Benfica", golos: 12 },
-    { id: uuidv4(), jogador: "Kiwior", equipa: "Porto", golos: 10 },
-  ];
+  const marcadores = jogadoresDB
+    .filter((jogador) => jogador.golos > 0)
+    .sort((jogador1, jogador2) => jogador2.golos - jogador1.golos)
+    .slice(0, 10);
 
   res.json(marcadores);
 });
-
 // Devolve todos os jogadores
 app.get("/jogadores", (req, res) => {
   res.json(jogadoresDB);
@@ -241,10 +238,38 @@ app.get("/equipas/:idequipa", (req, res) => {
   res.json(equipa);
 });
 
+// Devolve os jogadores de uma equipa específica
+app.get("/equipas/:idequipa/jogadores", (req, res) => {
+  // Procura a equipa pelo ID
+  const equipa = equipasDB.find((equipa) => equipa.id == req.params.idequipa);
+
+  // Procura os jogadores dessa equipa
+  const jogadores = jogadoresDB.filter(
+    (jogador) => jogador.equipa.toLowerCase() === equipa.equipa.toLowerCase(),
+  );
+
+  console.log(jogadores); // Debug
+
+  // Devolve os jogadores encontrados
+  res.json(jogadores);
+});
+
 // ===== ENDPOINTS POST =====
 
 // Adiciona uma nova equipa
 app.post("/equipas", (request, response) => {
+  const jaExiste = equipasDB.some((equipa) => {
+    return (
+      equipa.equipa.toLowerCase() ===
+      request.body.novaEquipa.nomeEquipa.toLowerCase()
+    );
+  });
+  console.log(jaExiste);
+  console.log(request.body);
+  if (jaExiste) {
+    return response.status(400).json({ error: "Equipa já existe" });
+  }
+
   console.log(request.body.novaEquipa.nomeEquipa); // Imprime os dados recebidos
   equipasDB.push({
     id: uuidv4(),
@@ -260,15 +285,40 @@ app.post("/equipas", (request, response) => {
 
 // Adiciona um novo jogador
 app.post("/jogadores", (request, response) => {
-  console.log(request.body.novoJogador.nomeJogador); // Imprime nome do jogador
+  // Verifica se já existe um jogador com o mesmo nome
+  const jaExiste = jogadoresDB.some((jogador) => {
+    // Compara o nome do jogador da base de dados
+    // com o nome recebido do formulário
+    return (
+      jogador.nome.toLowerCase() ===
+      request.body.novoJogador.nomeJogador.toLowerCase()
+    );
+  });
+
+  // Se já existir, devolve erro e não adiciona
+  if (jaExiste) {
+    return response.status(400).json({
+      error: "Jogador já existe",
+    });
+  }
+
+  // Mostra no terminal o nome recebido
+  console.log(request.body.novoJogador.nomeJogador);
+
+  // Adiciona o novo jogador ao array jogadoresDB
   jogadoresDB.push({
+    // Cria um id único automaticamente
     id: uuidv4(),
+
+    // Guarda os dados recebidos do frontend
     nome: request.body.novoJogador.nomeJogador,
     idade: request.body.novoJogador.idadeJogador,
     posicao: request.body.novoJogador.posicao,
     equipa: request.body.novoJogador.nomeEquipa,
     golos: request.body.novoJogador.golos,
   });
+
+  // Envia resposta de sucesso
   response.json({});
 });
 
