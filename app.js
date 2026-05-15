@@ -73,7 +73,7 @@ const jogadoresDB = [
     idade: 24,
     posicao: "Defesa",
     equipa: "Porto",
-    golos: 10,
+    golos: 0,
   },
   {
     id: uuidv4(),
