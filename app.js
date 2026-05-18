@@ -29,12 +29,24 @@ app.get("/equipas", (req, res) => {
 
 // Devolve a lista de marcadores
 app.get("/marcadores", (req, res) => {
+  console.log(req.query.pagina);
+  const pagina = req.query.pagina;
+  const items = req.query.items;
   const marcadores = jogadoresDB
     .filter((jogador) => jogador.golos > 0)
-    .sort((jogador1, jogador2) => jogador2.golos - jogador1.golos)
-    .slice(0, 10);
+    .sort((jogador1, jogador2) => jogador2.golos - jogador1.golos);
 
-  res.json(marcadores);
+  const start = pagina * items;
+  const end = start + items;
+  const resultado = marcadores.slice(start, end);
+
+  const devolver = {
+    items: resultado,
+    total: marcadores.length,
+    length: resultado.length,
+  };
+
+  res.json(devolver);
 });
 // Devolve todos os jogadores
 app.get("/jogadores", (req, res) => {
