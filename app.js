@@ -29,7 +29,6 @@ app.get("/equipas", (req, res) => {
 
 // Devolve a lista de marcadores
 app.get("/marcadores", (req, res) => {
-  console.log(req.query.pagina);
   const pagina = req.query.pagina;
   const items = req.query.items;
   const marcadores = jogadoresDB
@@ -40,13 +39,13 @@ app.get("/marcadores", (req, res) => {
   const end = start + items;
   const resultado = marcadores.slice(start, end);
 
-  const devolver = {
+  const resposta = {
     items: resultado,
     total: marcadores.length,
     length: resultado.length,
   };
 
-  res.json(devolver);
+  res.json(resposta);
 });
 // Devolve todos os jogadores
 app.get("/jogadores", (req, res) => {
