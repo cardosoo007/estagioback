@@ -24,7 +24,21 @@ app.get("/classificacoes", (req, res) => {
 
 // Devolve todas as equipas
 app.get("/equipas", (req, res) => {
-  res.json(equipasDB);
+  const pagina = req.query.pagina;
+  const items = req.query.items;
+
+  const start = pagina * items;
+  const end = start + items;
+
+  const resultado = equipasDB.slice(start, end);
+
+  const devolver = {
+    items: resultado,
+    total: equipasDB.length,
+    length: resultado.length,
+  };
+
+  res.json(devolver);
 });
 
 // Devolve a lista de marcadores
