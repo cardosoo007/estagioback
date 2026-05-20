@@ -15,9 +15,42 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // Devolve as classificações das equipas
 app.get("/classificacoes", (req, res) => {
   const classificacoes = [
-    { equipa: "Benfica", pontos: 30 },
-    { equipa: "Porto", pontos: 32 },
-    { equipa: "Sporting", pontos: 27 },
+    {
+      posicao: 1,
+      equipa: "Porto",
+      vitorias: 10,
+      empates: 2,
+      derrotas: 1,
+      golos: {
+        marcados: 30,
+        sofridos: 12,
+      },
+      pontos: 32,
+    },
+    {
+      posicao: 2,
+      equipa: "Benfica",
+      vitorias: 9,
+      empates: 3,
+      derrotas: 1,
+      golos: {
+        marcados: 22,
+        sofridos: 26,
+      },
+      pontos: 30,
+    },
+    {
+      posicao: 3,
+      equipa: "Sporting",
+      vitorias: 8,
+      empates: 3,
+      derrotas: 2,
+      golos: {
+        marcados: 27,
+        sofridos: 18,
+      },
+      pontos: 27,
+    },
   ];
   res.json(classificacoes);
 });
