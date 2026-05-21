@@ -1,58 +1,49 @@
 // Importar bibliotecas
 import express from "express";
 import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
-
+import axios from "axios";
 // Criar aplicação Express
 const app = express();
 const port = 3000;
 
-// Middleware para processar dados JSON e formulários
+// Middlere para processar dados JSON e formulários
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // ===== ENDPOINTS GET =====
 
 // Devolve as classificações das equipas
-app.get("/classificacoes", (req, res) => {
-  const classificacoes = [
-    {
-      posicao: 1,
-      equipa: "Porto",
-      vitorias: 10,
-      empates: 2,
-      derrotas: 1,
-      golos: {
-        marcados: 30,
-        sofridos: 12,
+app.get("/classificacoes", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.football-data.org/v4/competitions/PPL/standings",
+      {
+        headers: {
+          "X-Auth-Token": process.env.API_KEY,
+        },
       },
-      pontos: 32,
-    },
-    {
-      posicao: 2,
-      equipa: "Benfica",
-      vitorias: 9,
-      empates: 3,
-      derrotas: 1,
-      golos: {
-        marcados: 22,
-        sofridos: 26,
-      },
-      pontos: 30,
-    },
-    {
-      posicao: 3,
-      equipa: "Sporting",
-      vitorias: 8,
-      empates: 3,
-      derrotas: 2,
-      golos: {
-        marcados: 27,
-        sofridos: 18,
-      },
-      pontos: 27,
-    },
-  ];
-  res.json(classificacoes);
+    );
+    const tabela = response.data.standings[0].table;
+
+    const classificacoes = tabela.map((equipa) => {
+      return {
+        posicao: equipa.position,
+        equipa: equipa.team.name,
+        vitorias: equipa.won,
+        empates: equipa.draw,
+        derrotas: equipa.lost,
+        golos: {
+          marcados: equipa.goalsFor,
+          sofridos: equipa.goalsAgainst,
+        },
+        pontos: equipa.points,
+      };
+    });
+
+    res.json(classificacoes);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // Devolve todas as equipas
