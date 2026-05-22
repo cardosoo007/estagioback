@@ -6,7 +6,7 @@ import axios from "axios";
 const app = express();
 const port = 3000;
 
-// Middlere para processar dados JSON e formulários
+// Middleware para processar dados JSON e formulários
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
