@@ -1,7 +1,7 @@
 // Importar bibliotecas
 import express from "express";
 import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
-
+import axios from "axios";
 // Criar aplicação Express
 const app = express();
 const port = 3000;
@@ -13,13 +13,37 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // ===== ENDPOINTS GET =====
 
 // Devolve as classificações das equipas
-app.get("/classificacoes", (req, res) => {
-  const classificacoes = [
-    { equipa: "Benfica", pontos: 30 },
-    { equipa: "Porto", pontos: 32 },
-    { equipa: "Sporting", pontos: 27 },
-  ];
-  res.json(classificacoes);
+app.get("/classificacoes", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.football-data.org/v4/competitions/PPL/standings",
+      {
+        headers: {
+          "X-Auth-Token": process.env.API_KEY,
+        },
+      },
+    );
+    const tabela = response.data.standings[0].table;
+
+    const classificacoes = tabela.map((equipa) => {
+      return {
+        posicao: equipa.position,
+        equipa: equipa.team.name,
+        vitorias: equipa.won,
+        empates: equipa.draw,
+        derrotas: equipa.lost,
+        golos: {
+          marcados: equipa.goalsFor,
+          sofridos: equipa.goalsAgainst,
+        },
+        pontos: equipa.points,
+      };
+    });
+
+    res.json(classificacoes);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // Devolve todas as equipas
