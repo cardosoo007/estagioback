@@ -12,19 +12,25 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 // ===== ENDPOINTS GET =====
 
-// Devolve as classificações das equipas
+// Endpoint para devolver as classificações
 app.get("/classificacoes", async (req, res) => {
   try {
+    const liga = req.query.liga;
+    // Faz o pedido GET à API externa
     const response = await axios.get(
-      "https://api.football-data.org/v4/competitions/PPL/standings",
+      `https://api.football-data.org/v4/competitions/${liga}/standings`,
       {
+        // Envia o token de autenticação no header
         headers: {
           "X-Auth-Token": process.env.API_KEY,
         },
       },
     );
+
+    // Vai buscar a tabela dentro da resposta da API
     const tabela = response.data.standings[0].table;
 
+    // Transforma os dados da API para o formato usado no frontend
     const classificacoes = tabela.map((equipa) => {
       return {
         posicao: equipa.position,
@@ -40,8 +46,10 @@ app.get("/classificacoes", async (req, res) => {
       };
     });
 
+    // Envia as classificações para o frontend
     res.json(classificacoes);
   } catch (error) {
+    // Mostra o erro no terminal se o pedido falhar
     console.error(error);
   }
 });
