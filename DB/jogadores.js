@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
+
 const jogadoresDB = [
   {
     id: uuidv4(),

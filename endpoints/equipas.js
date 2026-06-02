@@ -50,7 +50,6 @@ export const postequipa = (request, response) => {
       request.body.novaEquipa.nomeEquipa.toLowerCase()
     );
   });
-  console.log(jaExiste);
   console.log(request.body);
   if (jaExiste) {
     return response.status(400).json({ error: "Equipa já existe" });
