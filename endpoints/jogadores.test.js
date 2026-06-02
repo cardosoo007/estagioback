@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { describe, expect, test, vi } from "vitest";
 import express from "express";
 import request from "supertest";
@@ -91,5 +92,21 @@ describe("Post Jogadores", () => {
       .expect(400);
 
     expect(result.body).toStrictEqual({ error: "Jogador já existe" });
+  });
+  test("caso o jogador nao exista adiciona com sucesso", async () => {
+    const novoJogador = {
+      nomeJogador: "Teste Novo",
+      idadeJogador: 21,
+      posicao: "Medio",
+      nomeEquipa: "Benfica",
+      golos: 2,
+    };
+
+    const result = await request(app)
+      .post("/postjogador")
+      .send({ novoJogador })
+      .expect(200);
+
+    expect(result.body).toStrictEqual({});
   });
 });

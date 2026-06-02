@@ -1,5 +1,6 @@
 import equipasDB from "../DB/equipas.js";
 import jogadoresDB from "../DB/jogadores.js";
+import { v4 as uuidv4 } from "uuid";
 
 export const getjogadores = (req, res) => {
   res.json(jogadoresDB);
