@@ -1,5 +1,6 @@
 import equipasDB from "../DB/equipas.js";
 import jogadoresDB from "../DB/jogadores.js";
+import axios from "axios";
 
 export const getequipas = (req, res) => {
   const pagina = req.query.pagina;
@@ -20,10 +21,17 @@ export const getequipas = (req, res) => {
 };
 
 // Devolve uma equipa específica pelo ID
-export const equipabyid = (req, res) => {
-  const equipa = equipasDB.find((equipa) => equipa.id == req.params.idequipa);
-  console.log(equipa); // Debug
-  res.json(equipa);
+export const equipabyid = async (req, res) => {
+  const response = await axios.get(
+    `https://api.football-data.org/v4/teams/${req.params.idequipa}`,
+    {
+      headers: {
+        "X-Auth-Token": process.env.API_KEY,
+      },
+    },
+  );
+
+  res.json(response.data);
 };
 
 // Devolve os jogadores de uma equipa específica

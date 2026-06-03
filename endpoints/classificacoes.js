@@ -22,6 +22,7 @@ export const getclassificacoes = async (req, res) => {
     const classificacoes = tabela.map((equipa) => {
       return {
         posicao: equipa.position,
+        equipaIdApi: equipa.team.id,
         logotipo: equipa.team.crest,
         equipa: equipa.team.name,
         vitorias: equipa.won,
