@@ -12,13 +12,13 @@ const app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.get("/getJogadores", getjogadores);
-app.get("/jogadorbyid/:idjogador", jogadorbyid);
-app.post("/postjogador", postjogador);
+app.get("/jogadores", getjogadores);
+app.get("/jogadores/:idjogador", jogadorbyid);
+app.post("/jogadores", postjogador);
 
 describe("Jogadores", () => {
   test("deve devolver a lista expectavel de jogadores", async () => {
-    const result = await request(app).get("/getJogadores").expect(200);
+    const result = await request(app).get("/jogadores").expect(200);
 
     expect(result.body).toStrictEqual(jogadoresDB);
   });
@@ -27,7 +27,7 @@ describe("Jogadores", () => {
 describe("JogadoresId", () => {
   test("// Devolve um jogador específico pelo ID", async () => {
     const result = await request(app)
-      .get(`/jogadorbyid/${jogadoresDB[3].id}`)
+      .get(`/jogadores/${jogadoresDB[3].id}`)
       .expect(200);
 
     expect(result.body).toStrictEqual({
@@ -41,7 +41,7 @@ describe("JogadoresId", () => {
   });
 
   test("// Caso passe um id nao existente devolve vazio", async () => {
-    const result = await request(app).get("/jogadorbyid/999").expect(200);
+    const result = await request(app).get("/jogadores/999").expect(200);
 
     expect(result.body).toStrictEqual("");
   });
@@ -57,7 +57,7 @@ describe("Post Jogadores", () => {
       golos: 0,
     };
     const result = await request(app)
-      .post("/postjogador")
+      .post("/jogadores")
       .send({ novoJogador })
       .expect(400);
 
@@ -72,7 +72,7 @@ describe("Post Jogadores", () => {
       golos: 0,
     };
     const result = await request(app)
-      .post("/postjogador")
+      .post("/jogadores")
       .send({ novoJogador })
       .expect(400);
 
@@ -87,7 +87,7 @@ describe("Post Jogadores", () => {
       golos: 0,
     };
     const result = await request(app)
-      .post("/postjogador")
+      .post("/jogadores")
       .send({ novoJogador })
       .expect(400);
 
@@ -103,7 +103,7 @@ describe("Post Jogadores", () => {
     };
 
     const result = await request(app)
-      .post("/postjogador")
+      .post("/jogadores")
       .send({ novoJogador })
       .expect(200);
 
