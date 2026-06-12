@@ -1,20 +1,32 @@
 import favoritosDB from "../DB/favoritos.js";
 
 export const getfavoritos = (req, res) => {
-  res.json(favoritosDB);
+  const userId = req.query.userId;
+
+  const favoritosDoUser = favoritosDB.filter((favorito) => {
+    return favorito.userId === userId;
+  });
+
+  res.json(favoritosDoUser);
 };
 
 export const postfavorito = (request, response) => {
-  const favorito = favoritosDB.find((favorito) => {
-    return favorito.equipaIdApi === request.body.novoFavorito.equipaIdApi;
+  const indice = favoritosDB.findIndex((favorito) => {
+    return (
+      favorito.userId === request.body.novoFavorito.userId &&
+      favorito.equipaIdApi === request.body.novoFavorito.equipaIdApi
+    );
   });
 
-  if (favorito) {
-    const indice = favoritosDB.indexOf(favorito);
+  if (indice !== -1) {
     favoritosDB.splice(indice, 1);
   } else {
     favoritosDB.push(request.body.novoFavorito);
   }
 
-  response.json(favoritosDB);
+  const favoritosDoUser = favoritosDB.filter((favorito) => {
+    return favorito.userId === request.body.novoFavorito.userId;
+  });
+
+  response.json(favoritosDoUser);
 };
