@@ -15,6 +15,7 @@ import {
   postequipa,
 } from "./endpoints/equipas.js";
 import { getclassificacoes } from "./endpoints/classificacoes.js";
+import { getfavoritos, postfavorito } from "./endpoints/favoritos.js";
 
 // Criar aplicação Express
 const app = express();
@@ -46,6 +47,8 @@ app.get("/equipas/:idequipa", equipabyid);
 // Devolve os jogadores de uma equipa específica
 app.get("/equipas/:idequipa/jogadores", jogadorporequipa);
 
+app.get("/favoritos", getfavoritos);
+
 // ===== ENDPOINTS POST =====
 
 // Adiciona uma nova equipa
@@ -53,6 +56,8 @@ app.post("/equipas", postequipa);
 
 // Adiciona um novo jogador
 app.post("/jogadores", postjogador);
+
+app.post("/favoritos", postfavorito);
 
 // Inicia o servidor na porta 3000
 app.listen(port, () => {
