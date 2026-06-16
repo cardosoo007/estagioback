@@ -1,12 +1,7 @@
 import { describe, expect, test } from "vitest";
 import express from "express";
 import request from "supertest";
-import {
-  getequipas,
-  equipabyid,
-  jogadorporequipa,
-  postequipa,
-} from "./equipas";
+import { getequipas, equipabyid, postequipa } from "./equipas";
 import equipasDB from "../DB/equipas";
 
 const app = express();
@@ -16,7 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/equipas", getequipas);
 app.get("/equipas/:idequipa", equipabyid);
-app.get("/equipas/:idequipa/jogadores", jogadorporequipa);
 app.post("/equipas", postequipa);
 
 describe("Equipas", () => {

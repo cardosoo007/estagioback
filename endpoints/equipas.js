@@ -1,5 +1,5 @@
 import equipasDB from "../DB/equipas.js";
-import jogadoresDB from "../DB/jogadores.js";
+import { v4 as uuidv4 } from "uuid";
 // Axios permite ao backend fazer pedidos HTTP para APIs externas.
 import axios from "axios";
 
@@ -43,25 +43,6 @@ export const equipabyid = async (req, res) => {
 
   // Envia para o frontend os detalhes da equipa exatamente como vieram da football-data.
   res.json(response.data);
-};
-
-// Devolve os jogadores de uma equipa específica
-export const jogadorporequipa = (req, res) => {
-  // Esta função ainda usa a base de dados antiga.
-  // Na nova página de detalhes da equipa, os jogadores já vêm da football-data dentro de equipa.squad.
-
-  // Procura a equipa pelo ID
-  const equipa = equipasDB.find((equipa) => equipa.id == req.params.idequipa);
-
-  // Procura os jogadores dessa equipa
-  const jogadores = jogadoresDB.filter(
-    (jogador) => jogador.equipa.toLowerCase() === equipa.equipa.toLowerCase(),
-  );
-
-  console.log(jogadores); // Debug
-
-  // Devolve os jogadores encontrados
-  res.json(jogadores);
 };
 
 // Adiciona uma nova equipa

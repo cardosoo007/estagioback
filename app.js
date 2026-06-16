@@ -1,19 +1,8 @@
 // Importar bibliotecas
+import "./firebase.js";
+
 import express from "express";
-import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
-import axios from "axios";
-import { getmarcadores } from "./endpoints/marcadores.js";
-import {
-  getjogadores,
-  jogadorbyid,
-  postjogador,
-} from "./endpoints/jogadores.js";
-import {
-  getequipas,
-  equipabyid,
-  jogadorporequipa,
-  postequipa,
-} from "./endpoints/equipas.js";
+import { getequipas, equipabyid, postequipa } from "./endpoints/equipas.js";
 import { getclassificacoes } from "./endpoints/classificacoes.js";
 import { getfavoritos, postfavorito } from "./endpoints/favoritos.js";
 
@@ -33,19 +22,8 @@ app.get("/classificacoes", getclassificacoes);
 // Devolve todas as equipas
 app.get("/equipas", getequipas);
 
-// Devolve a lista de marcadores
-app.get("/marcadores", getmarcadores);
-// Devolve todos os jogadores
-app.get("/jogadores", getjogadores);
-
-// Devolve um jogador específico pelo ID
-app.get("/jogadores/:idjogador", jogadorbyid);
-
 // Devolve uma equipa específica pelo ID
 app.get("/equipas/:idequipa", equipabyid);
-
-// Devolve os jogadores de uma equipa específica
-app.get("/equipas/:idequipa/jogadores", jogadorporequipa);
 
 app.get("/favoritos", getfavoritos);
 
@@ -53,9 +31,6 @@ app.get("/favoritos", getfavoritos);
 
 // Adiciona uma nova equipa
 app.post("/equipas", postequipa);
-
-// Adiciona um novo jogador
-app.post("/jogadores", postjogador);
 
 app.post("/favoritos", postfavorito);
 
