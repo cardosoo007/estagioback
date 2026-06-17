@@ -1,32 +1,45 @@
-import favoritosDB from "../DB/favoritos.js";
+import { db } from "../firebase.js";
 
-export const getfavoritos = (req, res) => {
+export const getfavoritos = async (req, res) => {
   const userId = req.query.userId;
 
-  const favoritosDoUser = favoritosDB.filter((favorito) => {
-    return favorito.userId === userId;
+  const snapshot = await db
+    .collection("favoritos")
+    .where("userId", "==", userId)
+    .get();
+
+  const favoritosDoUser = snapshot.docs.map((doc) => {
+    const favorito = doc.data();
+    return {
+      id: doc.id,
+      userId: favorito.userId,
+      equipaIdApi: favorito.equipaIdApi,
+    };
   });
 
   res.json(favoritosDoUser);
 };
 
-export const postfavorito = (request, response) => {
-  const indice = favoritosDB.findIndex((favorito) => {
-    return (
-      favorito.userId === request.body.novoFavorito.userId &&
-      favorito.equipaIdApi === request.body.novoFavorito.equipaIdApi
-    );
-  });
+export const postfavorito = async (request, response) => {
+  const novoFavorito = request.body.novoFavorito;
 
-  if (indice !== -1) {
-    favoritosDB.splice(indice, 1);
+  const snapshot = await db
+    .collection("favoritos")
+    .where("userId", "==", novoFavorito.userId)
+    .where("equipaIdApi", "==", novoFavorito.equipaIdApi)
+    .get();
+
+  if (!snapshot.empty) {
+    await snapshot.docs[0].ref.delete();
   } else {
-    favoritosDB.push(request.body.novoFavorito);
+    const favoritoCriado = await db.collection("favoritos").add(novoFavorito);
+
+    return response.json({
+      id: favoritoCriado.id,
+      userId: novoFavorito.userId,
+      equipaIdApi: novoFavorito.equipaIdApi,
+    });
   }
 
-  const favoritosDoUser = favoritosDB.filter((favorito) => {
-    return favorito.userId === request.body.novoFavorito.userId;
-  });
-
-  response.json(favoritosDoUser);
+  response.json(novoFavorito);
 };
