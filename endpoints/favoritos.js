@@ -9,9 +9,11 @@ export const getfavoritos = async (req, res) => {
     .get();
 
   const favoritosDoUser = snapshot.docs.map((doc) => {
+    const favorito = doc.data();
     return {
       id: doc.id,
-      ...doc.data(),
+      userId: favorito.userId,
+      equipaIdApi: favorito.equipaIdApi,
     };
   });
 
@@ -30,19 +32,14 @@ export const postfavorito = async (request, response) => {
   if (!snapshot.empty) {
     await snapshot.docs[0].ref.delete();
   } else {
-    await db.collection("favoritos").add(novoFavorito);
+    const favoritoCriado = await db.collection("favoritos").add(novoFavorito);
+
+    return response.json({
+      id: favoritoCriado.id,
+      userId: novoFavorito.userId,
+      equipaIdApi: novoFavorito.equipaIdApi,
+    });
   }
 
-  const favoritosAtualizados = await db
-    .collection("favoritos")
-    .where("userId", "==", novoFavorito.userId)
-    .get();
-
-  const favoritosDoUser = favoritosAtualizados.docs.map((doc) => {
-    return {
-      id: doc.id,
-      ...doc.data(),
-    };
-  });
-  response.json(favoritosDoUser);
+  response.json(novoFavorito);
 };
