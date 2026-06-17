@@ -20,10 +20,6 @@ export const getclassificacoes = async (req, res) => {
 
     console.log("API");
 
-    if (dadosEmCache) {
-      return res.json(dadosEmCache);
-    }
-
     // Faz o pedido GET à API externa
     const response = await axios.get(
       `https://api.football-data.org/v4/competitions/${liga}/standings`,
@@ -72,8 +68,6 @@ export const getclassificacoes = async (req, res) => {
 
     cache.set(key, classificacoes);
 
-    res.json(classificacoes);
-    // Envia as classificações para o frontend
     res.json(classificacoes);
   } catch (error) {
     // Mostra o erro no terminal se o pedido falhar
