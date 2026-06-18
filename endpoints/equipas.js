@@ -2,6 +2,7 @@ import equipasDB from "../DB/equipas.js";
 import { v4 as uuidv4 } from "uuid";
 // Axios permite ao backend fazer pedidos HTTP para APIs externas.
 import axios from "axios";
+import cache from "../cache.js";
 
 export const getequipas = (req, res) => {
   // pagina e items vêm da query string.
@@ -28,6 +29,13 @@ export const getequipas = (req, res) => {
 
 // Devolve uma equipa específica pelo ID
 export const equipabyid = async (req, res) => {
+  const key = `equipa-${req.params.idequipa}`;
+
+  const dadosEmCache = cache.get(key);
+
+  if (dadosEmCache) {
+    return res.json(dadosEmCache);
+  }
   // idequipa vem da rota /equipas/:idequipa.
   // Exemplo: se o frontend chamar /equipas/503, req.params.idequipa vale "503".
   // Este ID deve ser o ID externo da football-data, não o ID da nossa base de dados.
@@ -40,7 +48,7 @@ export const equipabyid = async (req, res) => {
       },
     },
   );
-
+  cache.set(key, response.data);
   // Envia para o frontend os detalhes da equipa exatamente como vieram da football-data.
   res.json(response.data);
 };

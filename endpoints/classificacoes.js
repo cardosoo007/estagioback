@@ -1,4 +1,5 @@
 import axios from "axios";
+import cache from "../cache.js";
 
 // Endpoint para devolver as classificações
 export const getclassificacoes = async (req, res) => {
@@ -6,6 +7,18 @@ export const getclassificacoes = async (req, res) => {
     // A liga vem da query string enviada pelo frontend.
     // Exemplo: /classificacoes?liga=PPL faz com que liga tenha o valor "PPL".
     const liga = req.query.liga;
+    const key = `classificacoes-${liga}`;
+
+    const dadosEmCache = cache.get(key);
+
+    console.log("Dados em cache:", dadosEmCache);
+
+    if (dadosEmCache) {
+      console.log("cache");
+      return res.json(dadosEmCache);
+    }
+
+    console.log("API");
 
     // Faz o pedido GET à API externa
     const response = await axios.get(
@@ -53,7 +66,8 @@ export const getclassificacoes = async (req, res) => {
       };
     });
 
-    // Envia as classificações para o frontend
+    cache.set(key, classificacoes);
+
     res.json(classificacoes);
   } catch (error) {
     // Mostra o erro no terminal se o pedido falhar
