@@ -14,6 +14,13 @@ const port = 3000;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+function verificarToken(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).json({ error: "Token em falta" });
+  }
+
+  next();
+}
 // ===== ENDPOINTS GET =====
 
 // Endpoint para devolver as classificações
@@ -25,14 +32,14 @@ app.get("/equipas", getequipas);
 // Devolve uma equipa específica pelo ID
 app.get("/equipas/:idequipa", equipabyid);
 
-app.get("/favoritos", getfavoritos);
+app.get("/favoritos", verificarToken, getfavoritos);
 
 // ===== ENDPOINTS POST =====
 
 // Adiciona uma nova equipa
 app.post("/equipas", postequipa);
 
-app.post("/favoritos", postfavorito);
+app.post("/favoritos", verificarToken, postfavorito);
 
 // Inicia o servidor na porta 3000
 app.listen(port, () => {
