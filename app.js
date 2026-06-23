@@ -1,7 +1,7 @@
 // Importar bibliotecas
 import "./firebase.js";
-
 import express from "express";
+import { auth } from "express-oauth2-jwt-bearer";
 import { getequipas, equipabyid, postequipa } from "./endpoints/equipas.js";
 import { getclassificacoes } from "./endpoints/classificacoes.js";
 import { getfavoritos, postfavorito } from "./endpoints/favoritos.js";
@@ -14,13 +14,10 @@ const port = 3000;
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-function verificarToken(req, res, next) {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ error: "Token em falta" });
-  }
-
-  next();
-}
+const verificarToken = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}/`,
+});
 // ===== ENDPOINTS GET =====
 
 // Endpoint para devolver as classificações
