@@ -1,5 +1,6 @@
 // Importar bibliotecas
 import "./firebase.js";
+import { getjogos } from "./endpoints/jogos.js";
 import express from "express";
 import { auth } from "express-oauth2-jwt-bearer";
 import { getequipas, equipabyid, postequipa } from "./endpoints/equipas.js";
@@ -20,6 +21,7 @@ const verificarToken = auth({
 });
 // ===== ENDPOINTS GET =====
 
+app.get("/jogos", getjogos);
 // Endpoint para devolver as classificações
 app.get("/classificacoes", getclassificacoes);
 
