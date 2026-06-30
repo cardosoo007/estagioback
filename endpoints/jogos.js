@@ -29,6 +29,8 @@ export const getjogos = async (req, res) => {
         casa: jogo.homeTeam.name,
         fora: jogo.awayTeam.name,
         estado: jogo.status,
+        resultadoCasa: jogo.score.fullTime.home,
+        resultadoFora: jogo.score.fullTime.away,
       };
     });
 
