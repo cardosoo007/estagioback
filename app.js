@@ -1,7 +1,8 @@
 // Importar bibliotecas
 import "./firebase.js";
+import { getjogos } from "./endpoints/jogos.js";
 import express from "express";
-import { auth } from "express-oauth2-jwt-bearer";
+import { auth, requiredScopes } from "express-oauth2-jwt-bearer";
 import { getequipas, equipabyid, postequipa } from "./endpoints/equipas.js";
 import { getclassificacoes } from "./endpoints/classificacoes.js";
 import { getfavoritos, postfavorito } from "./endpoints/favoritos.js";
@@ -18,8 +19,11 @@ const verificarToken = auth({
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}/`,
 });
+
+const verificarAdmin = requiredScopes("admin:access");
 // ===== ENDPOINTS GET =====
 
+app.get("/jogos", getjogos);
 // Endpoint para devolver as classificações
 app.get("/classificacoes", getclassificacoes);
 
@@ -31,10 +35,14 @@ app.get("/equipas/:idequipa", equipabyid);
 
 app.get("/favoritos", verificarToken, getfavoritos);
 
+app.get("/admin/verificar", verificarToken, verificarAdmin, (req, res) => {
+  res.json({ isAdmin: true });
+});
+
 // ===== ENDPOINTS POST =====
 
 // Adiciona uma nova equipa
-app.post("/equipas", postequipa);
+app.post("/equipas", verificarToken, verificarAdmin, postequipa);
 
 app.post("/favoritos", verificarToken, postfavorito);
 
