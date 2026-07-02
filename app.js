@@ -27,7 +27,7 @@ app.get("/jogos", getjogos);
 // Endpoint para devolver as classificações
 app.get("/classificacoes", getclassificacoes);
 
-// Devolve todas as equipas
+ // Devolve todas as equipas
 app.get("/equipas", getequipas);
 
 // Devolve uma equipa específica pelo ID
