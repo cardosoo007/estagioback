@@ -11,6 +11,14 @@ import { getfavoritos, postfavorito } from "./endpoints/favoritos.js";
 const app = express();
 const port = 3000;
 
+const mostrarPedido = (req, res, next) => {
+  console.log("recebido", req.method, req.url);
+
+  next();
+};
+
+// Middleware para mostrar os pedidos recebidos
+app.use(mostrarPedido);
 // Middleware para processar dados JSON e formulários
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
