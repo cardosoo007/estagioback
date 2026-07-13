@@ -1,5 +1,8 @@
-import { v4 as uuidv4 } from "uuid"; // Para gerar IDs únicos
+import { v4 as uuidv4 } from "uuid";
 
+// Base de dados local em memória usada para simular uma fonte de dados simples.
+// Esta estrutura é útil para demonstrações, testes e desenvolvimento inicial antes de integrar uma base de dados persistente.
+// Cada equipa contém um id gerado automaticamente, o nome, o treinador e os pontos atuais.
 const equipasDB = [
   {
     id: uuidv4(),
@@ -7,7 +10,6 @@ const equipasDB = [
     treinador: { nome: "Jose Mourinho", idade: 57 },
     pontos: 30,
   },
-
   {
     id: uuidv4(),
     equipa: "Porto",

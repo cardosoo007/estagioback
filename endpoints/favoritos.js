@@ -1,6 +1,10 @@
 import { db } from "../firebase.js";
 
+// Lista os favoritos de um utilizador específico a partir da coleção Firestore.
+// O frontend envia o userId via query string e o backend devolve as equipas marcadas como favoritas.
 export const getfavoritos = async (req, res) => {
+  // O userId é passado pelo frontend para identificar qual utilizador está a pedir os seus favoritos.
+  // Esta informação é usada na consulta ao Firestore para devolver apenas os registos pertencentes a esse utilizador.
   const userId = req.query.userId;
 
   const snapshot = await db
@@ -20,7 +24,11 @@ export const getfavoritos = async (req, res) => {
   res.json(favoritosDoUser);
 };
 
+// Cria ou remove um favorito.
+// Se já existir, a função faz toggle e elimina o registo; se não existir, cria um novo documento na coleção favoritos.
 export const postfavorito = async (request, response) => {
+  // O corpo do pedido contém o objeto novoFavorito com a informação do utilizador e da equipa.
+  // Esta rota funciona como um toggle: se o favorito já existir, ele é removido; se não existir, é criado.
   const novoFavorito = request.body.novoFavorito;
 
   const snapshot = await db

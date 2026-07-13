@@ -1,76 +1,61 @@
 import axios from "axios";
 import cache from "../cache.js";
 
-// Endpoint para devolver as classificações
+// Endpoint responsável por devolver a classificação de uma liga.
+// A rota recebe a liga via query string, por exemplo: /classificacoes?liga=PPL.
 export const getclassificacoes = async (req, res) => {
   try {
-    // A liga vem da query string enviada pelo frontend.
-    // Exemplo: /classificacoes?liga=PPL faz com que liga tenha o valor "PPL".
+    // A liga é recebida via query string e define qual competição deve ser consultada.
+    // Exemplo: /classificacoes?liga=PPL indica que o backend deve buscar a tabela da liga PPL.
     const liga = req.query.liga;
     const key = `classificacoes-${liga}`;
 
+    // Procura primeiro na cache para não repetir pedidos à API externa.
+    // Se a resposta já existir para esta liga, ela é devolvida imediatamente.
     const dadosEmCache = cache.get(key);
 
-    console.log("Dados em cache:", dadosEmCache);
-
     if (dadosEmCache) {
-      console.log("cache");
       return res.json(dadosEmCache);
     }
 
-    console.log("API");
-
-    // Faz o pedido GET à API externa
+    // Faz o pedido à football-data.org para obter a tabela da competição pedida.
     const response = await axios.get(
       `https://api.football-data.org/v4/competitions/${liga}/standings`,
       {
-        // Envia o token de autenticação no header
-        // process.env.API_KEY vem do ficheiro .env e não deve ser escrito diretamente no frontend.
         headers: {
           "X-Auth-Token": process.env.API_KEY,
         },
       },
     );
 
-    // Vai buscar a tabela dentro da resposta da API
+    // A API devolve a tabela dentro de response.data.standings[0].table.
+    // Esta parte do objeto contém a lista completa de posições e estatísticas da competição.
     const tabela = response.data.standings[0].table;
 
-    // Transforma os dados da API para o formato usado no frontend
+    // Mapeia os dados da API para um formato mais simples e útil para o frontend.
+    // O objetivo é reduzir a complexidade da resposta original e deixar a estrutura mais intuitiva para consumo.
     const classificacoes = tabela.map((equipa) => {
       return {
-        // position é a posição da equipa na tabela.
         posicao: equipa.position,
-
-        // Este é o ID externo da football-data.
-        // O frontend usa este ID no link /equipas/:id para conseguir pedir os detalhes corretos da equipa.
         equipaIdApi: equipa.team.id,
-
-        // crest é o logotipo da equipa na API externa.
         logotipo: equipa.team.crest,
-
-        // name é o nome oficial da equipa na API externa.
         equipa: equipa.team.name,
-
-        // Estatísticas da classificação que a tabela mostra no frontend.
         vitorias: equipa.won,
         empates: equipa.draw,
         derrotas: equipa.lost,
-
-        // Agrupamos os golos num objeto para o frontend conseguir usar golos.marcados e golos.sofridos.
         golos: {
           marcados: equipa.goalsFor,
           sofridos: equipa.goalsAgainst,
         },
-
         pontos: equipa.points,
       };
     });
 
+    // Armazena o resultado já tratado em cache para futuras requisições da mesma liga.
     cache.set(key, classificacoes);
 
     res.json(classificacoes);
   } catch (error) {
-    // Mostra o erro no terminal se o pedido falhar
     console.error(error);
   }
 };

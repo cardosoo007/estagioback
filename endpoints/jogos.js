@@ -1,17 +1,24 @@
 import axios from "axios";
 import cache from "../cache.js";
 
+// Endpoint que devolve os jogos de uma liga.
+// A resposta é simplificada para o frontend, mantendo apenas a informação mais útil.
 export const getjogos = async (req, res) => {
   try {
+    // A liga é recebida pela query string e define a competição de que se querem conhecer os jogos.
+    // Este valor é usado para montar a URL da API externa e para construir a chave de cache.
     const liga = req.query.liga;
     const key = `jogos-${liga}`;
 
+    // Procura os dados em cache antes de chamar a API externa.
+    // Se já existir uma resposta guardada para esta competição, ela é usada diretamente.
     const dadosEmCache = cache.get(key);
 
     if (dadosEmCache) {
       return res.json(dadosEmCache);
     }
 
+    // Pede os jogos da competição escolhida à API externa.
     const response = await axios.get(
       `https://api.football-data.org/v4/competitions/${liga}/matches`,
       {
@@ -21,6 +28,8 @@ export const getjogos = async (req, res) => {
       },
     );
 
+    // Transformação da resposta da API para um formato mais direto e fácil de consumir.
+    // O backend simplifica os campos da resposta original para deixar a informação mais limpa para o frontend.
     const jogos = response.data.matches.map((jogo) => {
       return {
         id: jogo.id,
@@ -34,6 +43,7 @@ export const getjogos = async (req, res) => {
       };
     });
 
+    // Guarda a resposta já tratada para evitar pedidos repetidos.
     cache.set(key, jogos);
 
     res.json(jogos);
